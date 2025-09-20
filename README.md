@@ -4,7 +4,7 @@ A modern, responsive SaaS dashboard built with React, Next.js, and Redux Toolkit
 
 ## 🚀 Live Demo
 
-[Deploy on Vercel](https://figma-dashboard.vercel.app) | [View on GitHub](https://github.com/yourusername/figma-dashboard)
+[Live Demo](https://assignment.tusharr.dev) | [View on GitHub](https://github.com/tushargoyal07/juspay-assignment-tushar)
 
 ## 🛠️ Tech Stack
 
@@ -335,6 +335,26 @@ vercel
 # Deploy to Netlify (if using Netlify CLI)
 netlify deploy --prod
 ```
+
+#### Custom Domain Setup
+**Target Domain**: `assignment.tusharr.dev`
+
+1. **Add Domain in Vercel Dashboard**
+   - Go to Project → Settings → Domains
+   - Add: `assignment.tusharr.dev`
+
+2. **Configure DNS**
+   ```
+   Type: CNAME
+   Name: assignment
+   Target: cname.vercel-dns.com
+   ```
+
+3. **Verify Deployment**
+   - Wait 5-10 minutes for DNS propagation
+   - Test: `https://assignment.tusharr.dev`
+
+**Detailed Setup**: See `CUSTOM_DOMAIN_SETUP.md`
 
 ## 🏗️ Project Architecture
 

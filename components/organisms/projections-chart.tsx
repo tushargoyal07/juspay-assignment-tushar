@@ -13,28 +13,36 @@ export function ProjectionsChart() {
         <CardTitle className="text-lg font-semibold text-foreground">Projections vs Actuals</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="h-full min-h-[100px]">
-          <ResponsiveContainer width="100%" height="150%" className="p-0 m-0">
-            <BarChart data={chartData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%" className="p-0 m-0">
+            <BarChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 10,
+                left: 5,
+                bottom: 5
+              }}
+            >
               <CartesianGrid className="stroke-1" horizontal={true} vertical={false} />
               <XAxis
                 dataKey="month"
-                className=" text-xs"
+                className="text-xs sm:text-sm"
                 axisLine={true}
                 tickLine={false}
-              // tick={{ fontSize: 12 }}
+                tick={{ fontSize: 10 }}
               />
               <YAxis
                 domain={[0, 300]}
-                tickCount={6}
-                className="var(--brand-primary) text-xs"
+                tickCount={4}
+                className="text-xs sm:text-sm"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 9 }}
               />
               <Bar
                 className="opacity-100"
-                barSize={15}
+                barSize={20}
                 dataKey="actual"
                 radius={[0, 0, 0, 0]}
                 fill="var(--brand-blue)"
@@ -49,7 +57,7 @@ export function ProjectionsChart() {
                 name="Projected"
                 radius={[4, 4, 0, 0]}
                 stackId="stack"
-                barSize={15}
+                barSize={20}
               />
 
             </BarChart>

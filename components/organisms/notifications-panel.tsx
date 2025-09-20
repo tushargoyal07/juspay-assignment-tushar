@@ -1,5 +1,6 @@
 "use client"
-import { Card, CardContent } from "@/components/ui/card"
+import React from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -111,10 +112,13 @@ export function NotificationsPanel({ className }: NotificationsPanelProps) {
   const { unreadCount } = useAppSelector((state) => state.notifications)
 
   return (
-    <Card className={cn("w-80 h-fit max-h-[600px]", className)}>
+    <Card className={cn("h-full", className)}>
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold text-foreground">All Notifications</CardTitle>
+      </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="h-[600px]">
-          <div className="p-6 space-y-6">
+        <ScrollArea className="h-[55vh]">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {notificationSections.map((section, sectionIndex) => (
               <div key={section.title}>
                 <h3 className="text-lg font-semibold text-foreground mb-4">{section.title}</h3>
@@ -126,41 +130,41 @@ export function NotificationsPanel({ className }: NotificationsPanelProps) {
                         // Contact item layout
                         <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={item.avatar || "/placeholder.svg"} />
-                            <AvatarFallback>{item.name?.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={(item as any).avatar || "/placeholder.svg"} />
+                            <AvatarFallback>{(item as any).name?.charAt(0)}</AvatarFallback>
                           </Avatar>
-                          <span className="text-sm font-medium text-foreground">{item.name}</span>
+                          <span className="text-sm font-medium text-foreground">{(item as any).name}</span>
                         </div>
                       ) : (
                         // Notification/Activity item layout
                         <div
                           className={cn(
-                            "flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors",
-                            !item.isRead && "bg-blue-50/50 dark:bg-blue-950/20",
+                            "flex items-start gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors",
+                            !(item as any).isRead && "bg-blue-50/50 dark:bg-blue-950/20",
                           )}
                         >
                           {/* Icon or Avatar */}
-                          {item.icon ? (
-                            <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", item.iconBg)}>
-                              <item.icon className={cn("w-4 h-4", item.iconColor)} />
+                          {(item as any).icon ? (
+                            <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", (item as any).iconBg)}>
+                              {React.createElement((item as any).icon, { className: cn("w-4 h-4", (item as any).iconColor) })}
                             </div>
                           ) : (
                             <Avatar className="w-8 h-8">
-                              <AvatarImage src={item.avatar || "/placeholder.svg"} />
+                              <AvatarImage src={(item as any).avatar || "/placeholder.svg"} />
                               <AvatarFallback>U</AvatarFallback>
                             </Avatar>
                           )}
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <p className={cn("text-sm text-foreground truncate", !item.isRead && "font-medium")}>
-                              {item.message}
+                            <p className={cn("text-sm text-foreground truncate", !(item as any).isRead && "font-medium")}>
+                              {(item as any).message}
                             </p>
-                            <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{(item as any).time}</p>
                           </div>
 
                           {/* Unread indicator */}
-                          {!item.isRead && <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />}
+                          {!(item as any).isRead && <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />}
                         </div>
                       )}
                     </div>

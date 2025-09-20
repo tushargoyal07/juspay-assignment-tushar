@@ -6,6 +6,7 @@ import { NavItem } from "@/components/molecules/nav-item"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   LayoutDashboard,
   FolderOpen,
@@ -19,20 +20,25 @@ import {
   Bell,
   Menu,
   ChevronLeft,
+  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface SidebarProps {
   className?: string
   isCollapsed?: boolean
   onToggle?: () => void
+  isMobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }: SidebarProps) {
+export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle, isMobileOpen, onMobileClose }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const [activeItem, setActiveItem] = useState("eCommerce")
   const [internalCollapsed, setInternalCollapsed] = useState(false)
+  const isMobile = useIsMobile()
 
   const isCollapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed
 
@@ -66,36 +72,36 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
   }
 
   const mainNavItems = [
-    { icon: LayoutDashboard, label: "Overview", key: "overview", path: "/" },
-    { icon: FolderOpen, label: "Projects", key: "projects", path: "/projects" },
+    { icon: LayoutDashboard, label: "Overview", key: "overview", path: "/", disabled: false },
+    { icon: FolderOpen, label: "Projects", key: "projects", path: "/projects", disabled: true, comingSoon: true },
   ]
 
   const favoriteItems = [
-    { icon: LayoutDashboard, label: "Default", key: "default", path: "/" },
-    { icon: LayoutDashboard, label: "eCommerce", key: "eCommerce", path: "/" },
-    { icon: FolderOpen, label: "Projects", key: "projects-fav", path: "/projects" },
-    { icon: GraduationCap, label: "Online Courses", key: "courses", path: "/courses" },
+    { icon: LayoutDashboard, label: "Default", key: "default", path: "/", disabled: false },
+    { icon: LayoutDashboard, label: "eCommerce", key: "eCommerce", path: "/", disabled: false },
+    { icon: FolderOpen, label: "Projects", key: "projects-fav", path: "/projects", disabled: true, comingSoon: true },
+    { icon: GraduationCap, label: "Online Courses", key: "courses", path: "/courses", disabled: true, comingSoon: true },
   ]
 
   const dashboardItems = [
-    { icon: User, label: "User Profile", key: "profile", path: "/profile" },
-    { icon: LayoutDashboard, label: "Overview", key: "overview-dash", path: "/" },
-    { icon: FolderOpen, label: "Projects", key: "projects-dash", path: "/projects" },
-    { icon: LayoutDashboard, label: "Campaigns", key: "campaigns", path: "/campaigns" },
-    { icon: LayoutDashboard, label: "Documents", key: "documents", path: "/documents" },
-    { icon: User, label: "Followers", key: "followers", path: "/followers" },
+    { icon: User, label: "User Profile", key: "profile", path: "/profile", disabled: true, comingSoon: true },
+    { icon: LayoutDashboard, label: "Overview", key: "overview-dash", path: "/", disabled: false },
+    { icon: FolderOpen, label: "Projects", key: "projects-dash", path: "/projects", disabled: true, comingSoon: true },
+    { icon: LayoutDashboard, label: "Campaigns", key: "campaigns", path: "/campaigns", disabled: true, comingSoon: true },
+    { icon: LayoutDashboard, label: "Documents", key: "documents", path: "/documents", disabled: true, comingSoon: true },
+    { icon: User, label: "Followers", key: "followers", path: "/followers", disabled: true, comingSoon: true },
   ]
 
   const accountItems = [
-    { icon: User, label: "Account", key: "account", path: "/account" },
-    { icon: Settings, label: "Corporate", key: "corporate", path: "/corporate" },
-    { icon: LayoutDashboard, label: "Blog", key: "blog", path: "/blog" },
-    { icon: User, label: "Social", key: "social", path: "/social" },
+    { icon: User, label: "Account", key: "account", path: "/account", disabled: true, comingSoon: true },
+    { icon: Settings, label: "Corporate", key: "corporate", path: "/corporate", disabled: true, comingSoon: true },
+    { icon: LayoutDashboard, label: "Blog", key: "blog", path: "/blog", disabled: true, comingSoon: true },
+    { icon: User, label: "Social", key: "social", path: "/social", disabled: true, comingSoon: true },
   ]
 
   const newNavItems = [
-    { icon: ShoppingCart, label: "Orders", key: "orders", path: "/orders" },
-    { icon: Bell, label: "Notifications", key: "notifications", path: "/notifications" },
+    { icon: ShoppingCart, label: "Orders", key: "orders", path: "/orders", disabled: false, comingSoon: false },
+    { icon: Bell, label: "Notifications", key: "notifications", path: "/notifications", disabled: false, comingSoon: false },
   ]
 
   return (
@@ -103,35 +109,55 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
       data-testid="sidebar"
       className={cn(
         "bg-sidebar border-r border-sidebar-border flex flex-col h-screen transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-16" : "w-64",
+        // Desktop behavior
+        !isMobile && (isCollapsed ? "w-16" : "w-64"),
+        // Mobile behavior - hidden by default, shown when isMobileOpen is true
+        isMobile && (isMobileOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full"),
         className,
       )}
     >
-      {/* Header */}
-      <div className="p-4">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={toggleSidebar} className="p-1 h-8 w-8 hover:bg-sidebar-accent">
-            {isCollapsed ? <Menu className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </Button>
+      {/* Header - hide completely on mobile when collapsed */}
+      {(!isMobile || isMobileOpen) && (
+        <div className={cn(
+          "transition-all duration-300",
+          isCollapsed && !isMobile ? "p-2" : "p-4"
+        )}>
+          <div className="flex items-center gap-3">
+            {/* Desktop toggle button - always show */}
+            {!isMobile && (
+              <Button variant="ghost" size="sm" onClick={toggleSidebar} className="p-1 h-8 w-8 hover:bg-sidebar-accent">
+                {isCollapsed ? <Menu className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+              </Button>
+            )}
 
-          {!isCollapsed && (
-            <>
-              <Avatar className="w-8 h-8">
-                <AvatarImage src="/diverse-user-avatars.png" />
-                <AvatarFallback>BW</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-sidebar-foreground">ByeWind</p>
-              </div>
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </>
-          )}
+            {/* Mobile close button - only show when sidebar is open */}
+            {isMobile && onMobileClose && isMobileOpen && (
+              <Button variant="ghost" size="sm" onClick={onMobileClose} className="p-1 h-8 w-8 hover:bg-sidebar-accent">
+                <X className="w-4 h-4" />
+              </Button>
+            )}
+
+            {/* Show user info only when not collapsed (desktop) or when mobile sidebar is open */}
+            {(!isCollapsed || (isMobile && isMobileOpen)) && (
+              <>
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src="/diverse-user-avatars.png" />
+                  <AvatarFallback>BW</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-sidebar-foreground">ByeWind</p>
+                </div>
+                {!isMobile && <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Navigation */}
       <div className="flex-1 px-2 space-y-4 overflow-y-auto">
-        {!isCollapsed && (
+        {/* Show navigation only when not collapsed (desktop) or when mobile sidebar is open */}
+        {(!isCollapsed || (isMobile && isMobileOpen)) && (
           <>
             {/* Main Navigation */}
             <div>
@@ -140,14 +166,35 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
               </h3>
               <div className="space-y-1">
                 {mainNavItems.map((item) => (
-                  <NavItem
-                    key={item.key}
-                    icon={item.icon}
-                    label={item.label}
-                    isActive={isItemActive(item.key, item.path)}
-                    onClick={() => handleNavigation(item.path, item.key)}
-                    isCollapsed={isCollapsed}
-                  />
+                  <TooltipProvider key={item.key}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <NavItem
+                            icon={item.icon}
+                            label={item.label}
+                            isActive={isItemActive(item.key, item.path)}
+                            onClick={() => {
+                              if (!item.disabled) {
+                                handleNavigation(item.path, item.key)
+                                // Close mobile sidebar after navigation
+                                if (isMobile && onMobileClose) {
+                                  onMobileClose()
+                                }
+                              }
+                            }}
+                            isCollapsed={isCollapsed}
+                            disabled={item.disabled}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      {item.comingSoon && (
+                        <TooltipContent>
+                          <p>Coming Soon</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 ))}
               </div>
             </div>
@@ -158,60 +205,89 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
 
         {/* Favorites */}
         <div>
-          {!isCollapsed && (
+          {(!isCollapsed || (isMobile && isMobileOpen)) && (
             <div className="space-y-1">
               {favoriteItems.map((item) => (
-                <NavItem
-                  key={item.key}
-                  icon={item.icon}
-                  label={item.label}
-                  isActive={isItemActive(item.key, item.path)}
-                  onClick={() => handleNavigation(item.path, item.key)}
-                  isCollapsed={isCollapsed}
-                />
-              ))}
-            </div>
-          )}
-
-          {isCollapsed && (
-            <div className="space-y-1">
-              {favoriteItems.slice(0, 4).map((item) => (
-                <NavItem
-                  key={item.key}
-                  icon={item.icon}
-                  label={item.label}
-                  isActive={isItemActive(item.key, item.path)}
-                  onClick={() => handleNavigation(item.path, item.key)}
-                  isCollapsed={isCollapsed}
-                />
+                <TooltipProvider key={item.key}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div>
+                        <NavItem
+                          icon={item.icon}
+                          label={item.label}
+                          isActive={isItemActive(item.key, item.path)}
+                          onClick={() => {
+                            if (!item.disabled) {
+                              handleNavigation(item.path, item.key)
+                              // Close mobile sidebar after navigation
+                              if (isMobile && onMobileClose) {
+                                onMobileClose()
+                              }
+                            }
+                          }}
+                          isCollapsed={isCollapsed}
+                          disabled={item.disabled}
+                          comingSoon={item.comingSoon}
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    {item.comingSoon && (
+                      <TooltipContent>
+                        <p>Coming Soon</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
               ))}
             </div>
           )}
         </div>
 
-        {!isCollapsed && <Separator className="bg-sidebar-border" />}
+        {(!isCollapsed || (isMobile && isMobileOpen)) && <Separator className="bg-sidebar-border" />}
 
         <div>
-          {!isCollapsed && (
+          {(!isCollapsed || (isMobile && isMobileOpen)) && (
             <h3 className="px-3 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Management
             </h3>
           )}
           <div className="space-y-1">
             {newNavItems.map((item) => (
-              <NavItem
-                key={item.key}
-                icon={item.icon}
-                label={item.label}
-                isActive={isItemActive(item.key, item.path)}
-                onClick={() => handleNavigation(item.path, item.key)}
-                isCollapsed={isCollapsed}
-              />
+              <TooltipProvider key={item.key}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <NavItem
+                        icon={item.icon}
+                        label={item.label}
+                        isActive={isItemActive(item.key, item.path)}
+                        onClick={() => {
+                          if (!item.disabled) {
+                            handleNavigation(item.path, item.key)
+                            // Close mobile sidebar after navigation
+                            if (isMobile && onMobileClose) {
+                              onMobileClose()
+                            }
+                          }
+                        }}
+                        isCollapsed={isCollapsed}
+                        disabled={item.disabled}
+                        comingSoon={item.comingSoon}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  {item.comingSoon && (
+                    <TooltipContent>
+                      <p>Coming Soon</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             ))}
           </div>
         </div>
 
-        {!isCollapsed && (
+        {(!isCollapsed || (isMobile && isMobileOpen)) && (
           <>
             <Separator className="bg-sidebar-border" />
 
@@ -222,14 +298,36 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
               </h3>
               <div className="space-y-1">
                 {dashboardItems.map((item) => (
-                  <NavItem
-                    key={item.key}
-                    icon={item.icon}
-                    label={item.label}
-                    isActive={isItemActive(item.key, item.path)}
-                    onClick={() => handleNavigation(item.path, item.key)}
-                    isCollapsed={isCollapsed}
-                  />
+                  <TooltipProvider key={item.key}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <NavItem
+                            icon={item.icon}
+                            label={item.label}
+                            isActive={isItemActive(item.key, item.path)}
+                            onClick={() => {
+                              if (!item.disabled) {
+                                handleNavigation(item.path, item.key)
+                                // Close mobile sidebar after navigation
+                                if (isMobile && onMobileClose) {
+                                  onMobileClose()
+                                }
+                              }
+                            }}
+                            isCollapsed={isCollapsed}
+                            disabled={item.disabled}
+                            comingSoon={item.comingSoon}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      {item.comingSoon && (
+                        <TooltipContent>
+                          <p>Coming Soon</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 ))}
               </div>
             </div>
@@ -240,14 +338,36 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
             <div>
               <div className="space-y-1">
                 {accountItems.map((item) => (
-                  <NavItem
-                    key={item.key}
-                    icon={item.icon}
-                    label={item.label}
-                    isActive={isItemActive(item.key, item.path)}
-                    onClick={() => handleNavigation(item.path, item.key)}
-                    isCollapsed={isCollapsed}
-                  />
+                  <TooltipProvider key={item.key}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <NavItem
+                            icon={item.icon}
+                            label={item.label}
+                            isActive={isItemActive(item.key, item.path)}
+                            onClick={() => {
+                              if (!item.disabled) {
+                                handleNavigation(item.path, item.key)
+                                // Close mobile sidebar after navigation
+                                if (isMobile && onMobileClose) {
+                                  onMobileClose()
+                                }
+                              }
+                            }}
+                            isCollapsed={isCollapsed}
+                            disabled={item.disabled}
+                            comingSoon={item.comingSoon}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      {item.comingSoon && (
+                        <TooltipContent>
+                          <p>Coming Soon</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 ))}
               </div>
             </div>
@@ -255,13 +375,33 @@ export function Sidebar({ className, isCollapsed: externalCollapsed, onToggle }:
         )}
       </div>
 
-      {/* Footer */}
-      <div className="p-2 border-t border-sidebar-border">
-        <div className="space-y-1">
-          <NavItem icon={HelpCircle} label="Help & Information" onClick={() => { }} isCollapsed={isCollapsed} />
-          <NavItem icon={LogOut} label="Log Out" onClick={() => { }} isCollapsed={isCollapsed} />
+      {/* Footer - only show when not collapsed (desktop) or when mobile sidebar is open */}
+      {(!isCollapsed || (isMobile && isMobileOpen)) && (
+        <div className="p-2 border-t border-sidebar-border">
+          <div className="space-y-1">
+            <NavItem
+              icon={HelpCircle}
+              label="Help & Information"
+              onClick={() => {
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+              isCollapsed={isCollapsed}
+            />
+            <NavItem
+              icon={LogOut}
+              label="Log Out"
+              onClick={() => {
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+              isCollapsed={isCollapsed}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { NotificationItem } from "@/components/molecules/notification-item"
 import { useAppSelector, useAppDispatch } from "@/lib/store"
 import { markAsRead } from "@/lib/features/notifications/notificationsSlice"
 import { Activity } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface ActivityFeedProps {
   className?: string
@@ -23,7 +24,7 @@ export function ActivityFeed({ className, maxItems = 10 }: ActivityFeedProps) {
   const recentActivity = notifications.slice(0, maxItems)
 
   return (
-    <Card className={className}>
+    <Card className={cn("h-full", className)}>
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           <Activity className="w-5 h-5" />
@@ -32,8 +33,8 @@ export function ActivityFeed({ className, maxItems = 10 }: ActivityFeedProps) {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-80">
-          <div className="space-y-1 p-4">
+        <ScrollArea className="h-[50vh]">
+          <div className="space-y-1 p-3 sm:p-4">
             {recentActivity.length === 0 ? (
               <div className="text-center py-8">
                 <Activity className="w-12 h-12 text-muted-foreground mx-auto mb-4" />

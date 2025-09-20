@@ -14,26 +14,40 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, className }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const isMobile = useIsMobile()
+
+  const handleMobileToggle = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen)
+  }
+
+  const handleMobileClose = () => {
+    setMobileSidebarOpen(false)
+  }
 
   return (
     <div className={cn("min-h-screen bg-background", className)}>
       {/* Fixed Sidebar */}
       <div className={cn(
         "fixed left-0 top-0 h-full z-30 transition-all duration-300 ease-in-out",
-        isMobile ? (sidebarCollapsed ? "w-0 -translate-x-full" : "w-64") : sidebarCollapsed ? "w-16" : "w-64"
+        // Desktop behavior
+        !isMobile && (sidebarCollapsed ? "w-16" : "w-64"),
+        // Mobile behavior - completely hidden by default, shown when mobileSidebarOpen is true
+        isMobile && (mobileSidebarOpen ? "w-64 translate-x-0" : "hidden")
       )}>
         <Sidebar
           isCollapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          isMobileOpen={mobileSidebarOpen}
+          onMobileClose={handleMobileClose}
         />
       </div>
 
       {/* Mobile Sidebar Overlay */}
-      {isMobile && !sidebarCollapsed && (
+      {isMobile && mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20"
-          onClick={() => setSidebarCollapsed(true)}
+          className="fixed inset-0 bg-black/50 z-20 transition-opacity duration-300"
+          onClick={handleMobileClose}
         />
       )}
 
@@ -51,7 +65,7 @@ export function DashboardLayout({ children, className }: DashboardLayoutProps) {
             left: sidebarCollapsed ? '4rem' : '16rem',
             width: sidebarCollapsed ? 'calc(100% - 4rem)' : 'calc(100% - 16rem)'
           } : {}}>
-          <TopBar onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)} />
+          <TopBar onMenuClick={isMobile ? handleMobileToggle : () => setSidebarCollapsed(!sidebarCollapsed)} />
         </div>
 
         {/* Scrollable Main Content */}

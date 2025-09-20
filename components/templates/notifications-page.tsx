@@ -5,7 +5,8 @@ import { ActivityFeed } from "@/components/organisms/activity-feed"
 
 export function NotificationsPage() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
+      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
@@ -13,9 +14,17 @@ export function NotificationsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <NotificationsPanel />
-        <ActivityFeed />
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* Notifications Panel */}
+        <div className="space-y-4">
+          <NotificationsPanel />
+        </div>
+
+        {/* Activity Feed */}
+        <div className="space-y-4">
+          <ActivityFeed />
+        </div>
       </div>
     </div>
   )
