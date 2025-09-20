@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "Dashboard - Figma UI Redux",
   description: "Modern dashboard built with atomic design principles",
   generator: "v0.app",
+  icons: {
+    icon: '/icon',
+    apple: '/apple-icon',
+  },
 }
 
 export default function RootLayout({
