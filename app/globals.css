@@ -1,0 +1,510 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Core Figma Design System Colors */
+  --figma-primary: #1C1C1C;
+  --figma-white: #FFFFFF;
+  --figma-gray: #404040;
+  --figma-border: rgba(28, 28, 28, 0.1);
+  --figma-border-light: rgba(28, 28, 28, 0.05);
+  --figma-border-medium: rgba(28, 28, 28, 0.2);
+
+  /* Semantic Color System */
+  --background: var(--figma-white);
+  --foreground: var(--figma-primary);
+  --card: var(--figma-white);
+  --card-foreground: var(--figma-primary);
+  --popover: var(--figma-white);
+  --popover-foreground: var(--figma-primary);
+  --primary: var(--figma-primary);
+  --primary-foreground: var(--figma-white);
+  --secondary: rgba(28, 28, 28, 0.05);
+  --secondary-foreground: var(--figma-primary);
+  --muted: rgba(28, 28, 28, 0.05);
+  --muted-foreground: rgba(28, 28, 28, 0.4);
+  --accent: var(--figma-primary);
+  --accent-foreground: var(--figma-white);
+  --destructive: #DC2626;
+  --destructive-foreground: var(--figma-white);
+  --border: var(--figma-border);
+  --input: rgba(28, 28, 28, 0.05);
+  --ring: var(--figma-primary);
+
+  /* Enhanced Brand Colors */
+  --brand-primary: var(--figma-primary);
+  --brand-primary-light: var(--figma-white);
+  --brand-blue: #A8C5DA;
+  --brand-purple: #8B5CF6;
+  --brand-indigo: #6366F1;
+  --brand-mint: #10B981;
+  --brand-success: #10B981;
+  --brand-warning: #F59E0B;
+  --brand-error: #DC2626;
+
+  /* Comprehensive Grayscale System */
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #E5E5E5;
+  --gray-300: #D4D4D4;
+  --gray-400: #A3A3A3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+  --gray-950: #0A0A0A;
+
+  /* Figma-specific opacity variants */
+  --figma-primary-5: rgba(28, 28, 28, 0.05);
+  --figma-primary-10: rgba(28, 28, 28, 0.1);
+  --figma-primary-20: rgba(28, 28, 28, 0.2);
+  --figma-primary-40: rgba(28, 28, 28, 0.4);
+  --figma-primary-60: rgba(28, 28, 28, 0.6);
+  --figma-primary-80: rgba(28, 28, 28, 0.8);
+
+  /* Chart Colors with Better Contrast */
+  --chart-1: #A8C5DA;
+  --chart-2: #8B5CF6;
+  --chart-3: #6366F1;
+  --chart-4: #10B981;
+  --chart-5: var(--figma-primary);
+  --chart-6: #F59E0B;
+  --chart-7: #EF4444;
+  --chart-8: #06B6D4;
+
+  /* Layout System */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Spacing System */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Shadow System */
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0px 8px 16px rgba(0, 0, 0, 0.1);
+
+  /* Sidebar Colors */
+  --sidebar: var(--figma-white);
+  --sidebar-foreground: var(--figma-primary);
+  --sidebar-primary: var(--figma-primary);
+  --sidebar-primary-foreground: var(--figma-white);
+  --sidebar-accent: var(--figma-primary-5);
+  --sidebar-accent-foreground: var(--figma-primary);
+  --sidebar-border: var(--figma-border);
+  --sidebar-ring: var(--figma-primary);
+}
+
+.dark {
+  /* Dark Theme - Inverted from Light Theme */
+  --background: #0A0A0A;
+  --foreground: var(--figma-white);
+  --card: #171717;
+  --card-foreground: var(--figma-white);
+  --popover: #171717;
+  --popover-foreground: var(--figma-white);
+  --primary: var(--figma-white);
+  --primary-foreground: var(--figma-primary);
+  --secondary: rgba(255, 255, 255, 0.05);
+  --secondary-foreground: var(--figma-white);
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: rgba(255, 255, 255, 0.6);
+  --accent: var(--figma-white);
+  --accent-foreground: var(--figma-primary);
+  --destructive: #EF4444;
+  --destructive-foreground: var(--figma-white);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.05);
+  --ring: var(--figma-white);
+
+  /* Dark mode chart colors with better contrast */
+  --chart-1: #7DD3FC;
+  --chart-2: #A78BFA;
+  --chart-3: #818CF8;
+  --chart-4: #34D399;
+  --chart-5: var(--figma-white);
+  --chart-6: #FBBF24;
+  --chart-7: #F87171;
+  --chart-8: #22D3EE;
+
+  /* Dark sidebar colors */
+  --sidebar: #0A0A0A;
+  --sidebar-foreground: var(--figma-white);
+  --sidebar-primary: var(--figma-white);
+  --sidebar-primary-foreground: var(--figma-primary);
+  --sidebar-accent: rgba(255, 255, 255, 0.05);
+  --sidebar-accent-foreground: var(--figma-white);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: var(--figma-white);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Core Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Chart Colors */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+
+  /* Figma Colors */
+  --color-figma-primary: var(--figma-primary);
+  --color-figma-white: var(--figma-white);
+  --color-figma-gray: var(--figma-gray);
+  --color-figma-border: var(--figma-border);
+  --color-figma-border-light: var(--figma-border-light);
+  --color-figma-border-medium: var(--figma-border-medium);
+
+  /* Figma Opacity Variants */
+  --color-figma-primary-5: var(--figma-primary-5);
+  --color-figma-primary-10: var(--figma-primary-10);
+  --color-figma-primary-20: var(--figma-primary-20);
+  --color-figma-primary-40: var(--figma-primary-40);
+  --color-figma-primary-60: var(--figma-primary-60);
+  --color-figma-primary-80: var(--figma-primary-80);
+
+  /* Brand Colors */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-indigo: var(--brand-indigo);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-success: var(--brand-success);
+  --color-brand-warning: var(--brand-warning);
+  --color-brand-error: var(--brand-error);
+
+  /* Radius System */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  /* Sidebar Colors */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Enhanced transitions for theme switching */
+  * {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+}
+
+@layer utilities {
+
+  /* Figma Design System Utilities */
+  .figma-primary {
+    color: var(--figma-primary);
+  }
+
+  .figma-white {
+    color: var(--figma-white);
+  }
+
+  .figma-gray {
+    color: var(--figma-gray);
+  }
+
+  .bg-figma-primary {
+    background-color: var(--figma-primary);
+  }
+
+  .bg-figma-white {
+    background-color: var(--figma-white);
+  }
+
+  .bg-figma-gray {
+    background-color: var(--figma-gray);
+  }
+
+  .border-figma-primary {
+    border-color: var(--figma-primary);
+  }
+
+  .border-figma-border {
+    border-color: var(--figma-border);
+  }
+
+  .border-figma-border-light {
+    border-color: var(--figma-border-light);
+  }
+
+  .border-figma-border-medium {
+    border-color: var(--figma-border-medium);
+  }
+
+  /* Opacity variants */
+  .figma-primary-5 {
+    color: var(--figma-primary-5);
+  }
+
+  .figma-primary-10 {
+    color: var(--figma-primary-10);
+  }
+
+  .figma-primary-20 {
+    color: var(--figma-primary-20);
+  }
+
+  .figma-primary-40 {
+    color: var(--figma-primary-40);
+  }
+
+  .figma-primary-60 {
+    color: var(--figma-primary-60);
+  }
+
+  .figma-primary-80 {
+    color: var(--figma-primary-80);
+  }
+
+  .bg-figma-primary-5 {
+    background-color: var(--figma-primary-5);
+  }
+
+  .bg-figma-primary-10 {
+    background-color: var(--figma-primary-10);
+  }
+
+  .bg-figma-primary-20 {
+    background-color: var(--figma-primary-20);
+  }
+
+  .bg-figma-primary-40 {
+    background-color: var(--figma-primary-40);
+  }
+
+  .bg-figma-primary-60 {
+    background-color: var(--figma-primary-60);
+  }
+
+  .bg-figma-primary-80 {
+    background-color: var(--figma-primary-80);
+  }
+
+  /* Brand color utilities */
+  .brand-primary {
+    color: var(--brand-primary);
+  }
+
+  .brand-blue {
+    color: var(--brand-blue);
+  }
+
+  .brand-purple {
+    color: var(--brand-purple);
+  }
+
+  .brand-indigo {
+    color: var(--brand-indigo);
+  }
+
+  .brand-mint {
+    color: var(--brand-mint);
+  }
+
+  .brand-success {
+    color: var(--brand-success);
+  }
+
+  .brand-warning {
+    color: var(--brand-warning);
+  }
+
+  .brand-error {
+    color: var(--brand-error);
+  }
+
+  .bg-brand-primary {
+    background-color: var(--brand-primary);
+  }
+
+  .bg-brand-blue {
+    background-color: var(--brand-blue);
+  }
+
+  .bg-brand-purple {
+    background-color: var(--brand-purple);
+  }
+
+  .bg-brand-indigo {
+    background-color: var(--brand-indigo);
+  }
+
+  .bg-brand-mint {
+    background-color: var(--brand-mint);
+  }
+
+  .bg-brand-success {
+    background-color: var(--brand-success);
+  }
+
+  .bg-brand-warning {
+    background-color: var(--brand-warning);
+  }
+
+  .bg-brand-error {
+    background-color: var(--brand-error);
+  }
+
+  /* Chart color utilities */
+  .chart-1 {
+    color: var(--chart-1);
+  }
+
+  .chart-2 {
+    color: var(--chart-2);
+  }
+
+  .chart-3 {
+    color: var(--chart-3);
+  }
+
+  .chart-4 {
+    color: var(--chart-4);
+  }
+
+  .chart-5 {
+    color: var(--chart-5);
+  }
+
+  .chart-6 {
+    color: var(--chart-6);
+  }
+
+  .chart-7 {
+    color: var(--chart-7);
+  }
+
+  .chart-8 {
+    color: var(--chart-8);
+  }
+
+  .bg-chart-1 {
+    background-color: var(--chart-1);
+  }
+
+  .bg-chart-2 {
+    background-color: var(--chart-2);
+  }
+
+  .bg-chart-3 {
+    background-color: var(--chart-3);
+  }
+
+  .bg-chart-4 {
+    background-color: var(--chart-4);
+  }
+
+  .bg-chart-5 {
+    background-color: var(--chart-5);
+  }
+
+  .bg-chart-6 {
+    background-color: var(--chart-6);
+  }
+
+  .bg-chart-7 {
+    background-color: var(--chart-7);
+  }
+
+  .bg-chart-8 {
+    background-color: var(--chart-8);
+  }
+
+  /* Shadow utilities */
+  .shadow-figma-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-figma-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-figma-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-figma-xl {
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Spacing utilities */
+  .space-figma-xs {
+    gap: var(--spacing-xs);
+  }
+
+  .space-figma-sm {
+    gap: var(--spacing-sm);
+  }
+
+  .space-figma-md {
+    gap: var(--spacing-md);
+  }
+
+  .space-figma-lg {
+    gap: var(--spacing-lg);
+  }
+
+  .space-figma-xl {
+    gap: var(--spacing-xl);
+  }
+
+  .space-figma-2xl {
+    gap: var(--spacing-2xl);
+  }
+}
